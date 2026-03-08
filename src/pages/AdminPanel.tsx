@@ -424,12 +424,16 @@ function CourseContentDialog({ courseId, onClose }: { courseId: string | null; o
                         </div>
                         {lesson.content_type === "video" && content?.video_url && (
                           <div className="aspect-video">
-                            <iframe
-                              src={toEmbedUrl(content.video_url)}
-                              className="w-full h-full rounded-lg"
-                              allowFullScreen
-                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            />
+                            {content.video_url.includes("course-videos") ? (
+                              <video src={content.video_url} controls className="w-full h-full rounded-lg bg-black" />
+                            ) : (
+                              <iframe
+                                src={toEmbedUrl(content.video_url)}
+                                className="w-full h-full rounded-lg"
+                                allowFullScreen
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                              />
+                            )}
                           </div>
                         )}
                         {lesson.content_type === "text" && content?.text && (
