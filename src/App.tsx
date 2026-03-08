@@ -14,6 +14,7 @@ import MyCourses from "./pages/MyCourses";
 import Dashboard from "./pages/Dashboard";
 import CourseEditor from "./pages/CourseEditor";
 import AdminPanel from "./pages/AdminPanel";
+import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
