@@ -241,15 +241,10 @@ export default function CourseEditor() {
           </DialogHeader>
           <div className="space-y-4">
             {editingLesson?.content_type === "video" && (
-              <div className="space-y-2">
-                <Label>URL видео (YouTube, Vimeo или embed-ссылка)</Label>
-                <Input
-                  value={lessonContent.video_url ?? ""}
-                  onChange={(e) => setLessonContent({ ...lessonContent, video_url: e.target.value })}
-                  placeholder="https://www.youtube.com/watch?v=... или https://youtu.be/..."
-                />
-                <p className="text-xs text-muted-foreground">Поддерживаются обычные ссылки YouTube и Vimeo — они автоматически конвертируются</p>
-              </div>
+              <VideoUploader
+                currentUrl={lessonContent.video_url}
+                onUrlChange={(url) => setLessonContent({ ...lessonContent, video_url: url })}
+              />
             )}
             {editingLesson?.content_type === "code" && (
               <>
