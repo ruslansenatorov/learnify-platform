@@ -29,7 +29,7 @@ export default function AdminPanel() {
   const { user, hasRole } = useAuth();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-
+  const [viewingCourseId, setViewingCourseId] = useState<string | null>(null);
   // Fetch all users with their roles and profiles
   const { data: usersData, isLoading: usersLoading } = useQuery({
     queryKey: ["admin-users"],
