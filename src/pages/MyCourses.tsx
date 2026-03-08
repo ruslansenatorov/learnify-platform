@@ -14,7 +14,7 @@ export default function MyCourses() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("enrollments")
-        .select("*, courses(*, profiles!courses_teacher_id_fkey(display_name))")
+        .select("*, courses(*)")
         .eq("user_id", user!.id)
         .order("enrolled_at", { ascending: false });
       if (error) throw error;
