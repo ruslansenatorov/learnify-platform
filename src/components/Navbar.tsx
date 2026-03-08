@@ -9,7 +9,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { GraduationCap, BookOpen, LayoutDashboard, LogOut, User } from "lucide-react";
+import { GraduationCap, BookOpen, LayoutDashboard, LogOut, User, ShieldCheck } from "lucide-react";
 
 export default function Navbar() {
   const { user, profile, hasRole, signOut } = useAuth();
@@ -44,6 +44,14 @@ export default function Navbar() {
                   <Link to="/dashboard" className="flex items-center gap-1.5">
                     <LayoutDashboard className="h-4 w-4" />
                     Управление
+                  </Link>
+                </Button>
+              )}
+              {hasRole("admin") && (
+                <Button variant="ghost" size="sm" asChild>
+                  <Link to="/admin" className="flex items-center gap-1.5">
+                    <ShieldCheck className="h-4 w-4" />
+                    Админ
                   </Link>
                 </Button>
               )}
