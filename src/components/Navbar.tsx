@@ -47,6 +47,14 @@ export default function Navbar() {
                   </Link>
                 </Button>
               )}
+              {hasRole("admin") && (
+                <Button variant="ghost" size="sm" asChild>
+                  <Link to="/admin" className="flex items-center gap-1.5">
+                    <ShieldCheck className="h-4 w-4" />
+                    Админ
+                  </Link>
+                </Button>
+              )}
               <Button variant="ghost" size="sm" asChild>
                 <Link to="/my-courses">Мои курсы</Link>
               </Button>

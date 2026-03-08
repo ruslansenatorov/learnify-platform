@@ -35,6 +35,7 @@ const App = () => (
             <Route path="/my-courses" element={<MyCourses />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/dashboard/courses/:courseId" element={<CourseEditor />} />
+            <Route path="/admin" element={<AdminPanel />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
