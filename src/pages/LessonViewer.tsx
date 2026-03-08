@@ -127,7 +127,7 @@ export default function LessonViewer() {
           {lesson.content_type === "video" && content?.video_url ? (
             <div className="aspect-video">
               <iframe
-                src={content.video_url}
+                src={toEmbedUrl(content.video_url)}
                 className="w-full h-full rounded-lg"
                 allowFullScreen
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
