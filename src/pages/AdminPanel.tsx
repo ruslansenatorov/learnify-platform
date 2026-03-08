@@ -9,10 +9,19 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { Shield, Users, BookOpen, Trash2, Eye, ShieldCheck, GraduationCap, UserCog } from "lucide-react";
+import { Shield, Users, BookOpen, Trash2, Eye, ShieldCheck, GraduationCap, UserCog, Play, FileText, Code } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import type { Database } from "@/integrations/supabase/types";
+
+function toEmbedUrl(url: string): string {
+  const match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([\w-]+)/);
+  if (match) return `https://www.youtube-nocookie.com/embed/${match[1]}`;
+  const vimeo = url.match(/vimeo\.com\/(\d+)/);
+  if (vimeo) return `https://player.vimeo.com/video/${vimeo[1]}`;
+  return url;
+}
 
 type AppRole = Database["public"]["Enums"]["app_role"];
 
