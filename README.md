@@ -1,3 +1,9 @@
+# БЫСТРЫЙ СТАРТ
+
+``npm install``
+
+``npm run dev``
+
 # Welcome to your Lovable project
 
 ## Project info
