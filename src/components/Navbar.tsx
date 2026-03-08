@@ -9,7 +9,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { GraduationCap, BookOpen, LayoutDashboard, LogOut, User } from "lucide-react";
+import { GraduationCap, BookOpen, LayoutDashboard, LogOut, User, ShieldCheck } from "lucide-react";
 
 export default function Navbar() {
   const { user, profile, hasRole, signOut } = useAuth();
