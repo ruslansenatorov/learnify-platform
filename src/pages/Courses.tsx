@@ -13,11 +13,18 @@ export default function Courses() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("courses")
-        .select("*, profiles!courses_teacher_id_fkey(display_name)")
+        .select("*")
         .eq("is_published", true)
         .order("created_at", { ascending: false });
       if (error) throw error;
-      return data;
+      // Fetch teacher names separately
+      const teacherIds = [...new Set(data.map(c => c.teacher_id))];
+      const { data: profiles } = await supabase
+        .from("profiles")
+        .select("user_id, display_name")
+        .in("user_id", teacherIds);
+      const profileMap = Object.fromEntries((profiles ?? []).map(p => [p.user_id, p]));
+      return data.map(c => ({ ...c, profiles: profileMap[c.teacher_id] ?? null }));
     },
   });
 

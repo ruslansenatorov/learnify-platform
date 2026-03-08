@@ -21,11 +21,17 @@ export default function CourseDetail() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("courses")
-        .select("*, profiles!courses_teacher_id_fkey(display_name)")
+        .select("*")
         .eq("id", id!)
         .single();
       if (error) throw error;
-      return data;
+      // Get teacher profile
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("display_name")
+        .eq("user_id", data.teacher_id)
+        .single();
+      return { ...data, profiles: profile };
     },
     enabled: !!id,
   });
