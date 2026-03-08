@@ -341,6 +341,14 @@ export default function AdminPanel() {
                           <Button
                             variant="outline"
                             size="icon"
+                            title="Контент"
+                            onClick={() => setViewingCourseId(course.id)}
+                          >
+                            <Play className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="icon"
                             onClick={() => navigate(`/courses/${course.id}`)}
                           >
                             <Eye className="h-4 w-4" />
