@@ -249,7 +249,6 @@ export default function CourseEditor() {
                 />
                 <p className="text-xs text-muted-foreground">Поддерживаются обычные ссылки YouTube и Vimeo — они автоматически конвертируются</p>
               </div>
-              </div>
             )}
             {editingLesson?.content_type === "code" && (
               <>
