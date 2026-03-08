@@ -13,6 +13,7 @@ import LessonViewer from "./pages/LessonViewer";
 import MyCourses from "./pages/MyCourses";
 import Dashboard from "./pages/Dashboard";
 import CourseEditor from "./pages/CourseEditor";
+import AdminPanel from "./pages/AdminPanel";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
