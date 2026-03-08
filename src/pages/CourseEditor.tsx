@@ -13,6 +13,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { toast } from "sonner";
 import { Plus, Trash2, GripVertical, FileText, Play, Code, ChevronLeft } from "lucide-react";
 import QuizEditor from "@/components/quiz/QuizEditor";
+import VideoUploader from "@/components/VideoUploader";
 
 export default function CourseEditor() {
   const { courseId } = useParams<{ courseId: string }>();
