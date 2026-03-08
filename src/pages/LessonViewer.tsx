@@ -8,6 +8,16 @@ import { toast } from "sonner";
 import { ChevronLeft, ChevronRight, CheckCircle2 } from "lucide-react";
 import QuizRenderer from "@/components/quiz/QuizRenderer";
 
+function toEmbedUrl(url: string): string {
+  // Convert youtube.com/watch?v=ID or youtu.be/ID to embed format
+  const match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([\w-]+)/);
+  if (match) return `https://www.youtube-nocookie.com/embed/${match[1]}`;
+  // Convert vimeo.com/ID
+  const vimeo = url.match(/vimeo\.com\/(\d+)/);
+  if (vimeo) return `https://player.vimeo.com/video/${vimeo[1]}`;
+  return url;
+}
+
 export default function LessonViewer() {
   const { id } = useParams<{ id: string }>();
   const { user } = useAuth();
