@@ -9,10 +9,19 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { Shield, Users, BookOpen, Trash2, Eye, ShieldCheck, GraduationCap, UserCog } from "lucide-react";
+import { Shield, Users, BookOpen, Trash2, Eye, ShieldCheck, GraduationCap, UserCog, Play, FileText, Code } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import type { Database } from "@/integrations/supabase/types";
+
+function toEmbedUrl(url: string): string {
+  const match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([\w-]+)/);
+  if (match) return `https://www.youtube-nocookie.com/embed/${match[1]}`;
+  const vimeo = url.match(/vimeo\.com\/(\d+)/);
+  if (vimeo) return `https://player.vimeo.com/video/${vimeo[1]}`;
+  return url;
+}
 
 type AppRole = Database["public"]["Enums"]["app_role"];
 
@@ -20,7 +29,7 @@ export default function AdminPanel() {
   const { user, hasRole } = useAuth();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-
+  const [viewingCourseId, setViewingCourseId] = useState<string | null>(null);
   // Fetch all users with their roles and profiles
   const { data: usersData, isLoading: usersLoading } = useQuery({
     queryKey: ["admin-users"],
@@ -332,6 +341,14 @@ export default function AdminPanel() {
                           <Button
                             variant="outline"
                             size="icon"
+                            title="Контент"
+                            onClick={() => setViewingCourseId(course.id)}
+                          >
+                            <Play className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="icon"
                             onClick={() => navigate(`/courses/${course.id}`)}
                           >
                             <Eye className="h-4 w-4" />
@@ -355,6 +372,86 @@ export default function AdminPanel() {
           </Card>
         </TabsContent>
       </Tabs>
+
+      <CourseContentDialog courseId={viewingCourseId} onClose={() => setViewingCourseId(null)} />
     </div>
+  );
+}
+
+function CourseContentDialog({ courseId, onClose }: { courseId: string | null; onClose: () => void }) {
+  const { data: sections, isLoading } = useQuery({
+    queryKey: ["admin-course-content", courseId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("course_sections")
+        .select("*, lessons(*)")
+        .eq("course_id", courseId!)
+        .order("position");
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!courseId,
+  });
+
+  const typeIcons: Record<string, any> = { text: FileText, video: Play, code: Code };
+
+  return (
+    <Dialog open={!!courseId} onOpenChange={(o) => !o && onClose()}>
+      <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle>Содержимое курса</DialogTitle>
+        </DialogHeader>
+        {isLoading ? (
+          <div className="space-y-3">
+            {[1, 2].map((i) => <div key={i} className="h-16 bg-muted animate-pulse rounded" />)}
+          </div>
+        ) : (
+          <div className="space-y-6">
+            {sections?.map((section, si) => (
+              <div key={section.id} className="space-y-3">
+                <h3 className="font-semibold text-lg">{si + 1}. {section.title}</h3>
+                {(section.lessons as any[])
+                  ?.sort((a: any, b: any) => a.position - b.position)
+                  .map((lesson: any, li: number) => {
+                    const Icon = typeIcons[lesson.content_type] || FileText;
+                    const content = lesson.content as any;
+                    return (
+                      <div key={lesson.id} className="border rounded-lg p-4 space-y-3">
+                        <div className="flex items-center gap-2">
+                          <Icon className="h-4 w-4 text-muted-foreground" />
+                          <span className="font-medium text-sm">{si + 1}.{li + 1} {lesson.title}</span>
+                          <Badge variant="secondary" className="text-xs">{lesson.content_type}</Badge>
+                        </div>
+                        {lesson.content_type === "video" && content?.video_url && (
+                          <div className="aspect-video">
+                            <iframe
+                              src={toEmbedUrl(content.video_url)}
+                              className="w-full h-full rounded-lg"
+                              allowFullScreen
+                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            />
+                          </div>
+                        )}
+                        {lesson.content_type === "text" && content?.text && (
+                          <div className="prose prose-sm max-w-none text-muted-foreground" dangerouslySetInnerHTML={{ __html: content.text }} />
+                        )}
+                        {lesson.content_type === "code" && content?.code && (
+                          <pre className="bg-muted p-3 rounded-lg overflow-x-auto font-mono text-xs">
+                            <code>{content.code}</code>
+                          </pre>
+                        )}
+                        {!content?.video_url && !content?.text && !content?.code && (
+                          <p className="text-xs text-muted-foreground">Контент не добавлен</p>
+                        )}
+                      </div>
+                    );
+                  })}
+              </div>
+            ))}
+            {!sections?.length && <p className="text-muted-foreground">Нет разделов</p>}
+          </div>
+        )}
+      </DialogContent>
+    </Dialog>
   );
 }
